@@ -1,0 +1,26 @@
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 20px;
+  background-color: #f2f2f2; /* Light grey background */
+}
+
+#chart-container {
+  width: 800px;
+  margin: 20px auto;
+}
+
+h1 {
+  font-size: 32px; /* Bigger font size */
+  font-weight: bold; /* Bold */
+  text-align: center;
+}
+
+/* Darker pink for bars */
+rect {
+  fill: #ff6699;
+}
+
+/* Black text for labels */
+text {
+  fill: black;
+}
