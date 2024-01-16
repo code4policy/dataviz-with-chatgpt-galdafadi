@@ -1,72 +1,50 @@
-// Load data from CSV
-d3.csv('311-basic/311_boston_data.csv').then(data => {
-  // Parse the count as numbers
-  data.forEach(d => {
-    d.Count = +d.Count;
-  });
+// Set the dimensions and margins of the graph
+const margin = {top: 30, right: 30, bottom: 70, left: 60},
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
 
-  // Sort the data by Count in descending order
-  data.sort((a, b) => b.Count - a.Count);
+// Append the svg object to the body of the page
+const svg = d3.select("#chart")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
 
-  // Take only the top 10 reasons
-  const top10Data = data.slice(0, 10);
+// Parse the Data
+d3.csv("311_boston_data.csv").then( data => {
 
-  // Set up the SVG container
-  const svg = d3.select('#chart-container')
-    .append('svg')
-    .attr('width', 800)
-    .attr('height', 400);
+    // Sort and keep top 10 reasons
+    data.sort((a, b) => d3.descending(+a.Count, +b.Count));
+    let topData = data.slice(0, 10);
 
-  // Set up scales
-  const xScale = d3.scaleBand()
-    .domain(top10Data.map(d => d.reason))
-    .range([0, 800])
-    .padding(0.1);
+    // X axis
+    const x = d3.scaleBand()
+      .range([0, width])
+      .domain(topData.map(d => d.reason))
+      .padding(0.2);
+    svg.append("g")
+      .attr("transform", `translate(0, ${height})`)
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
 
-  const yScale = d3.scaleLinear()
-    .domain([0, d3.max(top10Data, d => d.Count)])
-    .range([400, 0]);
+    // Add Y axis
+    const y = d3.scaleLinear()
+      .domain([0, d3.max(topData, d => +d.Count)])
+      .range([height, 0]);
+    svg.append("g")
+      .call(d3.axisLeft(y));
 
-  // Create bars with pink fill color
-  svg.selectAll('rect')
-    .data(top10Data)
-    .enter()
-    .append('rect')
-    .attr('x', d => xScale(d.reason))
-    .attr('y', d => yScale(d.Count))
-    .attr('width', xScale.bandwidth())
-    .attr('height', d => 400 - yScale(d.Count))
-    .attr('fill', 'pink');
-
-  // Add text labels with black color
-  svg.selectAll('text')
-    .data(top10Data)
-    .enter()
-    .append('text')
-    .text(d => `${d.reason}: ${d.Count}`)
-    .attr('x', d => xScale(d.reason) + xScale.bandwidth() / 2)
-    .attr('y', d => yScale(d.Count) - 5)
-    .attr('text-anchor', 'middle')
-    .style('font-size', '12px')
-    .style('fill', 'black');
-
-  // Add x-axis
-  svg.append('g')
-    .attr('transform', 'translate(0,400)')
-    .call(d3.axisBottom(xScale))
-    .selectAll('text')
-      .attr('transform', 'rotate(-45)')
-      .style('text-anchor', 'end');
-
-  // Add y-axis
-  svg.append('g')
-    .call(d3.axisLeft(yScale));
-
-  // Add chart title
-  svg.append('text')
-    .attr('x', 400)
-    .attr('y', 30)
-    .attr('text-anchor', 'middle')
-    .style('font-size', '18px')
-    .text('Top 10 Reasons for 311 in Boston (2023)');
+    // Bars
+    svg.selectAll("mybar")
+      .data(topData)
+      .enter()
+      .append("rect")
+        .attr("class", "bar")
+        .attr("x", d => x(d.reason))
+        .attr("y", d => y(d.Count))
+        .attr("width", x.bandwidth())
+        .attr("height", d => height - y(d.Count));
 });
