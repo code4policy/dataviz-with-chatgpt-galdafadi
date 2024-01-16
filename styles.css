@@ -1,26 +1,24 @@
+/* Styles for the bar chart */
+.bar {
+    fill: steelblue;
+}
+
+.bar:hover {
+    fill: lightpink;
+}
+
+.axis-label {
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+/* Adding light grey background */
 body {
-  font-family: 'Arial', sans-serif;
-  margin: 20px;
-  background-color: #f2f2f2; /* Light grey background */
-}
-
-#chart-container {
-  width: 800px;
-  margin: 20px auto;
-}
-
-h1 {
-  font-size: 32px; /* Bigger font size */
-  font-weight: bold; /* Bold */
-  text-align: center;
-}
-
-/* Darker pink for bars */
-rect {
-  fill: #ff6699;
-}
-
-/* Black text for labels */
-text {
-  fill: black;
-}
+    background-color: #f0f0f0; /* Light grey color */
