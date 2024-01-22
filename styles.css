@@ -1,0 +1,24 @@
+/* Styles for the bar chart */
+.bar {
+    fill: steelblue;
+}
+
+.bar:hover {
+    fill: lightpink;
+}
+
+.axis-label {
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+/* Adding light grey background */
+body {
+    background-color: #f0f0f0; /* Light grey color */
